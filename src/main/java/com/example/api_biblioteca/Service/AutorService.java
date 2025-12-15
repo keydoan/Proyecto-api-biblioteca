@@ -26,4 +26,18 @@ public class AutorService {
     public Autor buscarPorId(Long id) {
         return autorRepository.findById(id).orElse(null);
     }
+
+    public Autor actualizar(Long id, Autor autorNuevo) {
+        Autor autorExistente = autorRepository.findById(id).orElse(null);
+        if (autorExistente != null) {
+            autorExistente.setNombre(autorNuevo.getNombre());
+            autorExistente.setNacionalidad(autorNuevo.getNacionalidad());
+            return autorRepository.save(autorExistente);
+        }
+        return null;
+    }
+
+    public void borrar(Long id) {
+        autorRepository.deleteById(id);
+    }
 }

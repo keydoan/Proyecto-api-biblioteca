@@ -26,4 +26,17 @@ public class CategoriaService {
     public Categoria obtenerPorId(Long id) {
         return categoriaRepository.findById(id).orElse(null);
     }
+
+    public Categoria actualizar(Long id, Categoria categoriaNueva) {
+        Categoria catExistente = categoriaRepository.findById(id).orElse(null);
+        if (catExistente != null) {
+            catExistente.setNombre(categoriaNueva.getNombre());
+            return categoriaRepository.save(catExistente);
+        }
+        return null;
+    }
+
+    public void borrar(Long id) {
+        categoriaRepository.deleteById(id);
+    }
 }
