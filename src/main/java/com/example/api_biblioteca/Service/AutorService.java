@@ -40,4 +40,8 @@ public class AutorService {
     public void borrar(Long id) {
         autorRepository.deleteById(id);
     }
+
+    public List<Autor> getAutorNombreYNacionalidad(String nombre, String nacionalidad) {
+        return autorRepository.findByNombreAndNacionalidad(nombre, nacionalidad);
+    }
 }
