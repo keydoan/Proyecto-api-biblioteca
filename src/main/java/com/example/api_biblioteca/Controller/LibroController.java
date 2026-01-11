@@ -3,6 +3,7 @@ package com.example.api_biblioteca.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +29,14 @@ public class LibroController {
     }
 
     @GetMapping("/{id}")
-    public Libro obtenerUno(@PathVariable Long id) {
-        return libroService.obtenerLibroPorId(id);
+    public ResponseEntity<?> obtenerUno(@PathVariable Long id) { // <?> permite que el método devuelva dos cosas
+                                                                 // totalmente distintas.
+        try {
+            Libro libro = libroService.obtenerLibroPorId(id);
+            return ResponseEntity.ok(libro);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // Si no existe, devuelve 404
+        }
     }
 
     @PostMapping
@@ -38,13 +45,28 @@ public class LibroController {
     }
 
     @PutMapping("/{id}")
-    public Libro actualizar(@PathVariable Long id, @RequestBody Libro libro) {
-        return libroService.actualizarLibro(id, libro);
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody Libro libro) {
+        try {
+            Libro actualizado = libroService.actualizarLibro(id, libro);
+            return ResponseEntity.ok(actualizado); // Retorna el objeto libro.
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // Devuelve 404 si el ID no existe
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void borrar(@PathVariable Long id) {
-        libroService.borrarLibro(id);
+    public ResponseEntity<?> borrar(@PathVariable Long id) {
+        try {
+            libroService.borrarLibro(id);
+            return ResponseEntity.noContent().build(); // Devuelve 204 si se borra con éxito
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // Devuelve 404 si el ID no existe
+        }
+    }
+
+    @PostMapping("/lote") // Endpoint para operación en lote
+    public List<Libro> crearEnLote(@RequestBody List<Libro> libros) {
+        return libroService.guardarEnLote(libros);
     }
 
     // comentario para probar add en el git

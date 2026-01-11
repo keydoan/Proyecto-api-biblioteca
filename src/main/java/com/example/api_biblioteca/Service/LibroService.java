@@ -3,6 +3,8 @@ package com.example.api_biblioteca.Service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.api_biblioteca.Model.Libro;
 import com.example.api_biblioteca.Repository.LibroRepository;
 
@@ -17,8 +19,9 @@ public class LibroService {
     }
 
     public Libro obtenerLibroPorId(Long id) {
-        return libroRepository.findById(id).orElse(null);
-    }
+    return libroRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("No se encontró el libro con ID: " + id));
+}
 
     public Libro guardarLibro(Libro libro) {
         // Comprobar si existe un libro con el mismo titulo.
@@ -49,5 +52,24 @@ public class LibroService {
     // Borrar el libro
     public void borrarLibro(Long id) {
         libroRepository.deleteById(id);
+    }
+
+    @Transactional // O se guardan todos los libros de la lista, o no se guarda ninguno.
+    public List<Libro> guardarEnLote(List<Libro> libros) {
+        for (Libro libro : libros) { // Se procesan los libros enviados desde el Postman uno por uno
+            
+            // Validación anti-duplicados
+            if (libroRepository.existsByTitulo(libro.getTitulo())) {
+                throw new RuntimeException("Error en lote: Ya existe el título " + libro.getTitulo());
+            }
+            
+            // Simulación de error "prohibido", si se escribe un libro con el titulo "ERROR" lanzará una excepción.
+            if (libro.getTitulo().equalsIgnoreCase("ERROR")) {
+                throw new RuntimeException("Valor prohibido detectado. Cancelando transacción.");
+            }
+            // Se guarda el libro si pasó las dos comprobacioness previas.
+            libroRepository.save(libro);
+        }
+        return libros;
     }
 }
