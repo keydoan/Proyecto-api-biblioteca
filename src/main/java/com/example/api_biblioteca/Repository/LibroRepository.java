@@ -7,5 +7,6 @@ import com.example.api_biblioteca.Model.Libro;
 
 @Repository
 public interface LibroRepository extends JpaRepository<Libro, Long> {
-    
+    // Método para la validación anti-duplicados
+    boolean existsByTitulo(String titulo);
 }

@@ -21,6 +21,12 @@ public class LibroService {
     }
 
     public Libro guardarLibro(Libro libro) {
+        // Comprobar si existe un libro con el mismo titulo.
+        if (libroRepository.existsByTitulo(libro.getTitulo())) {
+            // Si exite el libro, se lanza la excepción.
+            throw new RuntimeException("Ya existe un libro con este titulo");
+        }
+        // Si no existe, se guarda el libro.
         return libroRepository.save(libro);
     }
 

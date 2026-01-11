@@ -44,7 +44,7 @@ public class AutorController {
     }
 
     @GetMapping("/buscar")
-    public List<Autor> listarAutor(@RequestParam String nombre, String nacionalidad) {
+    public List<Autor> listarAutor(@RequestParam String nombre, @RequestParam String nacionalidad) {
         return autorService.getAutorNombreYNacionalidad(nombre, nacionalidad);
     }
 }
