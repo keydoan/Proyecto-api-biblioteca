@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.example.api_biblioteca.Model.Autor;
 import com.example.api_biblioteca.Repository.AutorRepository;
+import com.example.api_biblioteca.Repository.LibroRepository;
 
 @Service
 public class AutorService {
 
     @Autowired
     private AutorRepository autorRepository;
+
+    @Autowired
+    private LibroRepository libroRepository;
+    
 
     public List<Autor> listarTodos() {
         return autorRepository.findAll();
@@ -43,5 +48,9 @@ public class AutorService {
 
     public List<Autor> getAutorNombreYNacionalidad(String nombre, String nacionalidad) {
         return autorRepository.findByNombreAndNacionalidad(nombre, nacionalidad);
+    }
+
+    public Long conteoLibros(Long autor_idLong) {
+        return libroRepository.countByAutorid(autor_idLong); // conteo de libros
     }
 }

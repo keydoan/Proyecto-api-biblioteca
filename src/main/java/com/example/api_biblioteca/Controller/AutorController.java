@@ -47,4 +47,9 @@ public class AutorController {
     public List<Autor> listarAutor(@RequestParam String nombre, @RequestParam String nacionalidad) {
         return autorService.getAutorNombreYNacionalidad(nombre, nacionalidad);
     }
+
+    @GetMapping("/{id}/conteo-libros")
+    public Long resultado(@PathVariable Long id){
+        return autorService.conteoLibros(id);
+    }
 }
